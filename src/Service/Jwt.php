@@ -1,0 +1,103 @@
+<?php declare(strict_types=1);
+
+namespace HBS\JwtAuth\Service;
+
+use Psr\Log\LoggerInterface;
+use Firebase\JWT\JWT as FirebaseJwt;
+use HBS\Helpers\ObjectHelper;
+use HBS\Helpers\StringHelper;
+use HBS\JwtAuth\Exception\AuthenticationException;
+use HBS\JwtAuth\Immutable\Jwt as JwtData;
+use HBS\JwtAuth\Immutable\Settings;
+
+final class Jwt
+{
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * @var Settings
+     */
+    private $settings;
+
+    public function __construct(LoggerInterface $logger, Settings $settings)
+    {
+        $this->logger = $logger;
+        $this->settings = $settings;
+    }
+
+    /**
+     * Returns JWT
+     *
+     * @param array $userData
+     * @return JwtData
+     * @throws \Exception
+     */
+    public function signIn(array $userData = []): JwtData
+    {
+        // JWT ID
+        $jti = StringHelper::randomBase62(16);
+
+        // Issued At
+        $iat = (new \DateTime())->getTimestamp();
+
+        // Expiration Time
+        $exp = (new \DateTime('@' . ($iat + $this->settings->expiration)))->getTimestamp();
+
+        $payload = [
+            'jti' => $jti,
+            'iat' => $iat,
+            'exp' => $exp,
+            'data' => $userData,
+        ];
+
+        $jwt = FirebaseJwt::encode($payload, $this->settings->secret, $this->settings->algorithm);
+
+        return new JwtData($jwt, $jti, $iat, $exp);
+    }
+
+    /**
+     * Returns user data
+     *
+     * @param string $jwt
+     * @return array
+     */
+    public function authenticate(string $jwt): array
+    {
+        try {
+            $payload = ObjectHelper::toArray(
+                FirebaseJwt::decode($jwt, $this->settings->secret, [ $this->settings->algorithm ])
+            );
+        } catch (\DomainException $e) {
+            throw $this->handleError($e);
+        } catch (\RuntimeException $e) {
+            throw $this->handleError($e);
+        }
+
+        if (!isset($payload['data'])) {
+            $this->logger->warning(sprintf("[%s] User data not found in the JWT", __CLASS__));
+
+            throw new AuthenticationException('Invalid token');
+        }
+
+        return $payload['data'];
+    }
+
+    /**
+     * Intercept and rethrow exception for security reasons
+     *
+     * @param \Exception $e
+     * @return AuthenticationException
+     */
+    private function handleError(\Exception $e): AuthenticationException
+    {
+        $this->logger->error(sprintf(
+            "[%s] Error! Type: %s; Code: %s; Message: %s; File: %s; Line: %s.",
+            __CLASS__, get_class($e), (string)$e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine()
+        ));
+
+        return new AuthenticationException('Invalid token');
+    }
+}
