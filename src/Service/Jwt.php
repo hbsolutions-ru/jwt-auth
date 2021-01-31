@@ -3,6 +3,7 @@
 namespace HBS\JwtAuth\Service;
 
 use Psr\Log\LoggerInterface;
+use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT as FirebaseJwt;
 use HBS\Helpers\ObjectHelper;
 use HBS\Helpers\StringHelper;
@@ -70,7 +71,9 @@ final class Jwt
             $payload = ObjectHelper::toArray(
                 FirebaseJwt::decode($jwt, $this->settings->secret, [ $this->settings->algorithm ])
             );
-        } catch (\DomainException $e) {
+        } catch (ExpiredException $e) {
+            throw $e;
+        } catch (\LogicException $e) {
             throw $this->handleError($e);
         } catch (\RuntimeException $e) {
             throw $this->handleError($e);
