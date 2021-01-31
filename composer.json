@@ -12,6 +12,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": "^7.3",
+        "psr/http-message": "1.0.x-dev",
         "psr/log": "^1.0.1",
         "firebase/php-jwt": "9999999-dev",
         "hbsolutions/php-helpers": "9999999-dev"
