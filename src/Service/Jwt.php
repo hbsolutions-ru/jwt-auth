@@ -79,13 +79,18 @@ final class Jwt
             throw $this->handleError($e);
         }
 
-        if (!isset($payload['data'])) {
-            $this->logger->warning(sprintf("[%s] User data not found in the JWT", __CLASS__));
+        if ($this->settings->dataKey && strlen($this->settings->dataKey)) {
 
-            throw new AuthenticationException('Invalid token');
+            if (!isset($payload[$this->settings->dataKey])) {
+                $this->logger->warning(sprintf("[%s] User data not found in the JWT", __CLASS__));
+
+                throw new AuthenticationException('Invalid token');
+            }
+
+            return $payload[$this->settings->dataKey];
         }
 
-        return $payload['data'];
+        return $payload;
     }
 
     /**

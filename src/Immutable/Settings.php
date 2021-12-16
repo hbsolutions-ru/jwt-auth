@@ -9,6 +9,7 @@ namespace HBS\JwtAuth\Immutable;
  * @property string $algorithm The signing algorithm
  * @property int $expiration JWT expiration time in seconds
  * @property string $secret The secret key
+ * @property string $dataKey The key of the object with user's data in the payload
  */
 final class Settings extends ImmutableAbstract
 {
@@ -27,13 +28,20 @@ final class Settings extends ImmutableAbstract
      */
     protected $_secret;
 
+    /**
+     * @var string
+     */
+    protected $_dataKey;
+
     public function __construct(
         string $algorithm,
         int $expiration,
-        string $secret
+        string $secret,
+        string $dataKey = 'data'
     ) {
         $this->_algorithm = $algorithm;
         $this->_expiration = $expiration;
         $this->_secret = $secret;
+        $this->_dataKey = $dataKey;
     }
 }
