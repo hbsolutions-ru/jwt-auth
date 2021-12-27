@@ -10,6 +10,7 @@ use HBS\Helpers\StringHelper;
 use HBS\JwtAuth\Exception\AuthenticationException;
 use HBS\JwtAuth\Immutable\Jwt as JwtData;
 use HBS\JwtAuth\Immutable\Settings;
+use HBS\JwtAuth\Meta\Info;
 
 final class Jwt
 {
@@ -82,7 +83,7 @@ final class Jwt
         if ($this->settings->dataKey && strlen($this->settings->dataKey)) {
 
             if (!isset($payload[$this->settings->dataKey])) {
-                $this->logger->warning(sprintf("[%s] User data not found in the JWT", __CLASS__));
+                $this->logger->warning(sprintf("[%s] User data not found in the JWT", Info::PROJECT_NAME));
 
                 throw new AuthenticationException('Invalid token');
             }
@@ -103,7 +104,7 @@ final class Jwt
     {
         $this->logger->error(sprintf(
             "[%s] Error! Type: %s; Code: %s; Message: %s; File: %s; Line: %s.",
-            __CLASS__, get_class($e), (string)$e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine()
+            Info::PROJECT_NAME, get_class($e), (string)$e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine()
         ));
 
         return new AuthenticationException('Invalid token');

@@ -7,10 +7,17 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
+use Psr\Log\LoggerInterface;
+use HBS\JwtAuth\Meta\Info;
 use HBS\JwtAuth\Service\WebAuthorization;
 
 final class JwtAuthMiddleware implements MiddlewareInterface
 {
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     /**
      * @var ResponseFactoryInterface
      */
@@ -21,8 +28,12 @@ final class JwtAuthMiddleware implements MiddlewareInterface
      */
     protected $service;
 
-    public function __construct(ResponseFactoryInterface $factory, WebAuthorization $service)
-    {
+    public function __construct(
+        LoggerInterface $logger,
+        ResponseFactoryInterface $factory,
+        WebAuthorization $service
+    ) {
+        $this->logger = $logger;
         $this->factory = $factory;
         $this->service = $service;
     }
@@ -32,6 +43,9 @@ final class JwtAuthMiddleware implements MiddlewareInterface
         try {
             $this->service->authorize($request);
         } catch (\RuntimeException $e) {
+            $this->logger->debug(
+                sprintf("[%s] Auth failed in Middleware: %s", Info::PROJECT_NAME, $e->getMessage())
+            );
             return $this->unauthorized();
         }
 
