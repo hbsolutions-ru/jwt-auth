@@ -2,14 +2,23 @@
 
 namespace HBS\JwtAuth\Middleware;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ResponseFactoryInterface;
-use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
-use Psr\Log\LoggerInterface;
-use HBS\JwtAuth\Meta\Info;
-use HBS\JwtAuth\Service\WebAuthorization;
+use Psr\Http\Message\{
+    ResponseInterface as Response,
+    ResponseFactoryInterface,
+    ServerRequestInterface as Request,
+};
+use Psr\Http\Server\{
+    MiddlewareInterface,
+    RequestHandlerInterface as RequestHandler,
+};
+use Psr\Log\{
+    LoggerInterface,
+    NullLogger,
+};
+use HBS\JwtAuth\{
+    Meta\Info,
+    Service\WebAuthorization,
+};
 
 final class JwtAuthMiddleware implements MiddlewareInterface
 {
@@ -29,16 +38,16 @@ final class JwtAuthMiddleware implements MiddlewareInterface
     protected $service;
 
     public function __construct(
-        LoggerInterface $logger,
         ResponseFactoryInterface $factory,
-        WebAuthorization $service
+        WebAuthorization $service,
+        LoggerInterface $logger = null
     ) {
-        $this->logger = $logger;
         $this->factory = $factory;
         $this->service = $service;
+        $this->logger = $logger ?: new NullLogger();
     }
 
-    public function process(Request $request, RequestHandler $handler): ResponseInterface
+    public function process(Request $request, RequestHandler $handler): Response
     {
         try {
             $this->service->authorize($request);
@@ -52,7 +61,7 @@ final class JwtAuthMiddleware implements MiddlewareInterface
         return $handler->handle($request);
     }
 
-    private function unauthorized(): ResponseInterface
+    private function unauthorized(): Response
     {
         $response = $this->factory->createResponse();
         return $response

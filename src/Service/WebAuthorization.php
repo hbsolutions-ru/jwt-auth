@@ -3,10 +3,16 @@
 namespace HBS\JwtAuth\Service;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Log\LoggerInterface;
 use HBS\JwtAuth\Exception\AuthenticationException;
 
 final class WebAuthorization
 {
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     /**
      * @var Jwt
      */
@@ -17,8 +23,12 @@ final class WebAuthorization
      */
     private $authorizationService;
 
-    public function __construct(Jwt $jwtService, AuthorizationServiceInterface $authorizationService)
-    {
+    public function __construct(
+        LoggerInterface $logger,
+        Jwt $jwtService,
+        AuthorizationServiceInterface $authorizationService
+    ) {
+        $this->logger = $logger;
         $this->jwtService = $jwtService;
         $this->authorizationService = $authorizationService;
     }
