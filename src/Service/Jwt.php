@@ -3,14 +3,21 @@
 namespace HBS\JwtAuth\Service;
 
 use Psr\Log\LoggerInterface;
-use Firebase\JWT\ExpiredException;
-use Firebase\JWT\JWT as FirebaseJwt;
-use HBS\Helpers\ObjectHelper;
-use HBS\Helpers\StringHelper;
-use HBS\JwtAuth\Exception\AuthenticationException;
-use HBS\JwtAuth\Immutable\Jwt as JwtData;
-use HBS\JwtAuth\Immutable\Settings;
-use HBS\JwtAuth\Meta\Info;
+use Firebase\JWT\{
+    ExpiredException,
+    JWT as FirebaseJwt,
+    Key,
+};
+use HBS\Helpers\{
+    ObjectHelper,
+    StringHelper,
+};
+use HBS\JwtAuth\{
+    Exception\AuthenticationException,
+    Immutable\Jwt as JwtData,
+    Immutable\Settings,
+    Meta\Info,
+};
 
 final class Jwt
 {
@@ -69,8 +76,9 @@ final class Jwt
     public function authenticate(string $jwt): array
     {
         try {
+            $key = new Key($this->settings->secret, $this->settings->algorithm);
             $payload = ObjectHelper::toArray(
-                FirebaseJwt::decode($jwt, $this->settings->secret, [ $this->settings->algorithm ])
+                FirebaseJwt::decode($jwt, $key)
             );
         } catch (ExpiredException $e) {
             throw $e;

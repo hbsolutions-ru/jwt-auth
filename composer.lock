@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "firebase/php-jwt",
-            "version": "dev-master",
+            "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://github.com/firebase/php-jwt.git",
-                "reference": "f42c9110abe98dd6cfe9053c49bc86acc70b2d23"
+                "reference": "edda0f9ee45b8367699804f792a9be6d5175e816"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/f42c9110abe98dd6cfe9053c49bc86acc70b2d23",
-                "reference": "f42c9110abe98dd6cfe9053c49bc86acc70b2d23",
+                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/edda0f9ee45b8367699804f792a9be6d5175e816",
+                "reference": "edda0f9ee45b8367699804f792a9be6d5175e816",
                 "shasum": ""
             },
             "require": {
@@ -25,6 +25,9 @@
             },
             "require-dev": {
                 "phpunit/phpunit": ">=4.8 <=9"
+            },
+            "suggest": {
+                "paragonie/sodium_compat": "Support EdDSA (Ed25519) signatures when libsodium is not present"
             },
             "default-branch": true,
             "type": "library",
@@ -57,9 +60,9 @@
             ],
             "support": {
                 "issues": "https://github.com/firebase/php-jwt/issues",
-                "source": "https://github.com/firebase/php-jwt/tree/v5.2.1"
+                "source": "https://github.com/firebase/php-jwt/tree/main"
             },
-            "time": "2021-02-12T00:02:00+00:00"
+            "time": "2021-12-30T19:00:10+00:00"
         },
         {
             "name": "hbsolutions/php-helpers",
@@ -67,16 +70,20 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/hbsolutions-ru/php-helpers.git",
-                "reference": "0d3e1f8efa98f6064778afda6d730746b3d079e9"
+                "reference": "9216535927692b1a2c971cf81031eaee1e9b5faa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hbsolutions-ru/php-helpers/zipball/0d3e1f8efa98f6064778afda6d730746b3d079e9",
-                "reference": "0d3e1f8efa98f6064778afda6d730746b3d079e9",
+                "url": "https://api.github.com/repos/hbsolutions-ru/php-helpers/zipball/9216535927692b1a2c971cf81031eaee1e9b5faa",
+                "reference": "9216535927692b1a2c971cf81031eaee1e9b5faa",
                 "shasum": ""
             },
             "require": {
+                "ext-json": "*",
                 "php": "^7.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9"
             },
             "default-branch": true,
             "type": "library",
@@ -100,7 +107,7 @@
                 "issues": "https://github.com/hbsolutions-ru/php-helpers/issues",
                 "source": "https://github.com/hbsolutions-ru/php-helpers/tree/main"
             },
-            "time": "2021-01-27T07:35:24+00:00"
+            "time": "2022-01-05T17:28:32+00:00"
         },
         {
             "name": "psr/http-factory",
@@ -329,22 +336,21 @@
         },
         {
             "name": "psr/log",
-            "version": "dev-master",
+            "version": "1.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
-                "reference": "dd738d0b4491f32725492cf345f6b501f5922fec"
+                "reference": "d49695b909c3b7628b6289db5479a1c204601f11"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/dd738d0b4491f32725492cf345f6b501f5922fec",
-                "reference": "dd738d0b4491f32725492cf345f6b501f5922fec",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/d49695b909c3b7628b6289db5479a1c204601f11",
+                "reference": "d49695b909c3b7628b6289db5479a1c204601f11",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -374,9 +380,9 @@
                 "psr-3"
             ],
             "support": {
-                "source": "https://github.com/php-fig/log/tree/master"
+                "source": "https://github.com/php-fig/log/tree/1.1.4"
             },
-            "time": "2020-09-18T06:44:51+00:00"
+            "time": "2021-05-03T11:20:27+00:00"
         }
     ],
     "packages-dev": [],
